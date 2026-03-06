@@ -16,10 +16,11 @@ However, the company lacks a unified system to analyze operational performance.
 
 Key questions addressed in this project:
 
-* Which turbines generate the most energy?
-* How do climatic conditions affect production?
+* Which turbines generate the highest economic return?
+* How does wind speed distribution affect production levels?
 * What is the impact of maintenance events on downtime?
-* What is the economic performance of the wind farm?
+* Are newer turbine models more efficient and reliable than older ones?
+
 
 The objective was to create a **data model and analytical dashboard** to support operational monitoring and decision-making.
 
