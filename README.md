@@ -68,10 +68,7 @@ After cleaning, the datasets were integrated into a relational model used for an
 
 Main relationships:
 
-* Production → Turbines
-* Maintenance → Turbines
-* Climate → Production (date)
-* Prices → Production (date)
+IMAGEN
 
 This structure enables analysis across turbines, time periods and environmental conditions.
 
