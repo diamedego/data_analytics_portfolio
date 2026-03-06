@@ -11,7 +11,7 @@ The goal is to transform raw operational, climatic and maintenance data into a s
 
 ## Business Problem
 
-Aerowind operates a wind farm composed of multiple turbines installed between 2023 and 2025.
+Aerowind operates a wind farm composed of 3 types of turbines installed between 2023 and 2025.
 However, the company lacks a unified system to analyze operational performance.
 
 Key questions addressed in this project:
