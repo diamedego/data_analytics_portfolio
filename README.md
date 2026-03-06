@@ -17,7 +17,7 @@ However, the company lacks a unified system to analyze operational performance.
 Key questions addressed in this project:
 
 * Which turbines generate the highest economic return?
-* How does cliamte condition distribution affect production levels?
+* How does climate condition distribution affect production levels?
 * What is the impact of maintenance events on downtime?
 * Are newer turbine models more efficient and reliable than older ones?
 
