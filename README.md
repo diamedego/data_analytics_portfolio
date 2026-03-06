@@ -7,8 +7,6 @@ IMAGEN
 This project analyzes the operational and economic performance of the **Aerowind wind farm** using SQL and Power BI.
 The goal is to transform raw operational, climatic and maintenance data into a structured analytical model that allows monitoring turbine performance, identifying operational issues and evaluating the profitability of wind energy generation.
 
-The project integrates multiple datasets and builds a relational data model to evaluate wind farm efficiency.
-
 ---
 
 ## Business Problem
