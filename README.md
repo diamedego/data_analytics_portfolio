@@ -54,6 +54,7 @@ Main tasks included:
 * Date format standardization
 * Null value verification
 * Consistency checks across datasets
+* Numerical validation based on physical coherence
 
 SQL scripts can be found in:
 
