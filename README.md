@@ -1,6 +1,7 @@
 # Wind Farm Performance Analysis – Aerowind
 
-IMAGEN
+<img width="1080" height="386" alt="image" src="https://github.com/user-attachments/assets/b50dea63-52ac-4e15-bf04-9341a1aed544" />
+
 
 ## Project Overview
 
