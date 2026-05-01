@@ -71,6 +71,7 @@ Main relationships:
 <img width="442" height="353" alt="image" src="https://github.com/user-attachments/assets/6ebde6a4-0c79-44d6-b7e1-6ac545f2c89d" />
 
 
+
 This structure enables analysis across turbines, time periods and environmental conditions.
 
 ---
