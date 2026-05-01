@@ -109,14 +109,26 @@ The Power BI file is available in:
 
 ## Key Insights
 
-Some relevant findings from the analysis include:
+The analysis covers the 2023–2025 period and reveals a clear positive trend in energy, operational, and economic performance across the farm.
 
-* Significant differences in performance between turbine models
-* Recurring downtime patterns in specific turbines
-* Wind conditions explain part of production variability
-* Newer turbine models show higher generation efficiency
+**Performance & Efficiency**
 
-These insights can support operational optimization and maintenance planning.
+Capacity factor and total energy generated increased progressively year over year, driven by the incorporation of newer turbine models
+GE 2.5-116 turbines consistently outperformed older models in generation efficiency and reliability
+
+**Critical Assets**
+
+T003 was identified as the main underperforming asset, concentrating the highest maintenance costs and lowest availability in the fleet
+T001 and T004 also showed below-average performance, flagging them as candidates for differentiated maintenance strategies
+
+**Maintenance Impact**
+
+A shift toward preventive maintenance correlated with improved availability and lower unplanned downtime
+Wind seasonality analysis supports rescheduling non-critical interventions during low-generation periods to minimize energy loss
+
+**Strategic Takeaway**
+
+The farm is evolving from a reactive to a data-driven operational model, where technical and economic decisions are grounded in measurable KPIs — enabling better investment prioritization and more predictable economic outcomes
 
 ---
 
