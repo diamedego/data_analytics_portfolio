@@ -5,7 +5,7 @@
 
 ## Project Overview
 
-This project analyzes the operational and economic performance of The Lighthouse Wind Farm, owned and operated by **Aerowind**, using SQL and Power BI. The goal is to transform raw operational, climatic, and maintenance data into a structured analytical model that enables monitoring of turbine performance, identification of operational issues, and evaluation of the profitability of wind energy generation.
+This project analyzes the operational and economic performance of The Lighthouse Wind Farm, owned and operated by **Aerowind**, using **SQL & Power BI**. The goal is to transform raw operational, climatic, and maintenance data into a structured analytical model that enables monitoring of turbine performance, identification of operational issues, and evaluation of the profitability of wind energy generation.
 
 ---
 
