@@ -58,8 +58,7 @@ Main tasks included:
 
 SQL scripts can be found in:
 
-(((((CARGAR SQL)))))
-
+)))agreagr====
 ---
 
 ## Data Model
