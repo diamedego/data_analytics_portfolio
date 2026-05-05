@@ -1,11 +1,10 @@
-
--- 1) Crear base de datos y usarla
+-- 1) Create database and use it
 DROP DATABASE IF EXISTS aerowind;
 CREATE DATABASE aerowind;
 USE aerowind;
 
--- 2) Crear tablas crudas (RAW)
--- Nota: las fechas entran como VARCHAR y luego se convierten a DATE.
+-- 2) Create raw tables (RAW)
+-- Note: dates are loaded as VARCHAR and then converted to DATE.
 
 DROP TABLE IF EXISTS turbinas_raw;
 CREATE TABLE turbinas_raw (
@@ -64,7 +63,7 @@ CREATE TABLE curvas_teoricas_raw (
 );
 
 
--- 3) Importación de archivos CSV
+-- 3) CSV file import
 
 -- TURBINAS
 LOAD DATA LOCAL INFILE '/Users/diameladego/Desktop/SQL ejercicios/PROYECTO FINAL V4/Bases crudas/turbinas_base_cruda.csv'
@@ -126,9 +125,9 @@ LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (modelo, velocidad_mps, potencia_teorica_kw);
 
--- 4) Normalización de fechas
+-- 4) Date normalization
 
--- Muestreo rápido
+-- Quick sample
 SELECT * FROM turbinas_raw LIMIT 10;
 SELECT * FROM clima_raw LIMIT 10;
 SELECT * FROM produccion_raw LIMIT 10;
@@ -157,9 +156,9 @@ SET fecha = DATE_FORMAT(
 ALTER TABLE clima_raw
 MODIFY fecha DATE;
 
--- PRODUCCIÓN: fecha , formato correcto.
+-- PRODUCCIÓN: fecha, correct format.
 
--- MANTENIMIENTO: fecha_mant, formato correcto.
+-- MANTENIMIENTO: fecha_mant, correct format.
 
 -- PRECIO: fecha
 UPDATE precio_raw
@@ -171,9 +170,9 @@ SET fecha = DATE_FORMAT(
 ALTER TABLE precio_raw
 MODIFY fecha DATE;
 
--- VERIFICACIONES
+-- VERIFICATIONS
 
--- Rango de fechas
+-- Date range
 SELECT 'turbinas_raw' AS tabla, MIN(fecha_instalacion) AS fecha_min, MAX(fecha_instalacion) AS fecha_max FROM turbinas_raw
 UNION ALL
 SELECT 'clima_raw', MIN(fecha), MAX(fecha) FROM clima_raw
@@ -184,7 +183,7 @@ SELECT 'mantenimiento_raw', MIN(fecha_mant), MAX(fecha_mant) FROM mantenimiento_
 UNION ALL
 SELECT 'precio_raw', MIN(fecha), MAX(fecha) FROM precio_raw;
 
--- Muestreo rápido
+-- Quick sample
 SELECT * FROM turbinas_raw LIMIT 10;
 SELECT * FROM clima_raw LIMIT 10;
 SELECT * FROM produccion_raw LIMIT 10;
@@ -192,7 +191,7 @@ SELECT * FROM mantenimiento_raw LIMIT 10;
 SELECT * FROM precio_raw LIMIT 10;
 
 
--- 5) Diagnóstico inicial: conteo de filas por tabla
+-- 5) Initial diagnosis: row count per table
 
 SELECT 'clima_raw' AS tabla, COUNT(*) AS filas FROM clima_raw
 UNION ALL
@@ -206,9 +205,9 @@ SELECT 'precio_raw', COUNT(*) FROM precio_raw
 UNION ALL
 SELECT 'curvas_teoricas_raw', COUNT(*) FROM curvas_teoricas_raw;
 
--- 6) Identificacion y limpieza de duplicados
+-- 6) Duplicate identification and removal
 
--- TURBINAS: duplicados por id_turbina
+-- TURBINAS: duplicates by id_turbina
 
 SELECT
     id_turbina,
@@ -217,9 +216,9 @@ FROM turbinas_raw
 GROUP BY id_turbina
 HAVING COUNT(*) > 1;
 
--- No se detectan duplicados en turbinas_raw.
+-- No duplicates detected in turbinas_raw.
 
--- CLIMA: duplicados por fecha
+-- CLIMA: duplicates by fecha
 
 SELECT
     fecha,
@@ -228,9 +227,9 @@ FROM clima_raw
 GROUP BY fecha
 HAVING COUNT(*) > 1;
 
--- No se detectan duplicados en clima_raw.
+-- No duplicates detected in clima_raw.
 
--- PRODUCCIÓN: duplicados por fecha + turbina
+-- PRODUCCIÓN: duplicates by fecha + turbina
 
 SELECT
     fecha,
@@ -240,7 +239,7 @@ FROM produccion_raw
 GROUP BY fecha, id_turbina
 HAVING COUNT(*) > 1;
 
--- Inspección detallada
+-- Detailed inspection
 SELECT p.*
 FROM produccion_raw p
 JOIN (
@@ -252,13 +251,13 @@ JOIN (
 ORDER BY p.id_turbina, p.fecha, p.id_registro;
 
 /*
-Se detectan registros duplicados para la combinación id_turbina–fecha.
-Dado que la información no se encuentra a nivel estrictamente diario,
-se procede a unificar los registros con el objetivo de establecer
-una granularidad de análisis de un día por turbina.
+Duplicate records are detected for the id_turbina–fecha combination.
+Since the data is not strictly at a daily granularity,
+records are consolidated in order to establish
+an analysis granularity of one day per turbine.
 */
 
--- Paso A: consolidación diaria por turbina y fecha
+-- Step A: daily consolidation by turbine and date
 
 DROP TABLE IF EXISTS produccion_diaria_base;
 
@@ -275,7 +274,7 @@ GROUP BY
     id_turbina,
     fecha;
 
--- Paso B: generación del ID diario siguiendo la lógica original
+-- Step B: ID generation following the original logic
 DROP TABLE IF EXISTS produccion_diaria;
 
 CREATE TABLE produccion_diaria AS
@@ -302,7 +301,7 @@ SELECT
     temperatura_promedio_c
 FROM produccion_diaria_base;
 
--- Validación
+-- Validation
 SELECT
     fecha,
     id_turbina,
@@ -313,7 +312,7 @@ HAVING COUNT(*) > 1;
 
 SELECT 'produccion_diaria', COUNT(*) FROM produccion_diaria;
 
--- MANTENIMIENTO: duplicados por turbina + fecha
+-- MANTENIMIENTO: duplicates by turbine + date
 
 SELECT
     id_turbina,
@@ -323,9 +322,9 @@ FROM mantenimiento_raw
 GROUP BY id_turbina, fecha_mant
 HAVING COUNT(*) > 1;
 
--- No se detectan duplicados en mantenimiento_raw.
+-- No duplicates detected in mantenimiento_raw.
 
--- PRECIO: duplicados por fecha
+-- PRECIO: duplicates by fecha
 
 SELECT
     fecha,
@@ -334,9 +333,9 @@ FROM precio_raw
 GROUP BY fecha
 HAVING COUNT(*) > 1;
 
--- No se detectan duplicados en precio_raw.
+-- No duplicates detected in precio_raw.
 
--- CURVAS TEORICAS: duplicados por modelo y velocidad
+-- CURVAS TEORICAS: duplicates by model and speed
 
 SELECT
     modelo,
@@ -346,12 +345,12 @@ FROM curvas_teoricas_raw
 GROUP BY modelo, velocidad_mps
 HAVING COUNT(*) > 1;
 
--- No se detectan duplicados en curvas_teoricas_raw
+-- No duplicates detected in curvas_teoricas_raw
 
--- 7) Identificacion y limpíeza de valores invalidos
+-- 7) Invalid value identification and removal
 
 -- TURBINAS
--- a)  Valores nulos o vacíos
+-- a) Null or empty values
 SELECT
     SUM(CASE WHEN id_turbina IS NULL OR id_turbina = '' THEN 1 ELSE 0 END) AS id_turbina_faltante,
     SUM(CASE WHEN modelo IS NULL OR modelo = '' THEN 1 ELSE 0 END)         AS modelo_faltante,
@@ -360,10 +359,10 @@ SELECT
     SUM(CASE WHEN fecha_instalacion IS NULL THEN 1 ELSE 0 END)             AS fecha_faltante
 FROM turbinas_raw;
 
--- No se detectan valores nulos o vacios
+-- No null or empty values detected.
 
--- b) Potencia nominal inválida
--- Potencia nominal invalida
+-- b) Invalid nominal power
+-- Invalid nominal power
 SELECT
     id_turbina,
     modelo,
@@ -377,9 +376,9 @@ WHERE
     OR (modelo = 'GE.2.5-116'  AND potencia_nominal_kw > 2500);
     
 /*
-Se detecta potencia negativa.
-Conocemos el nombre de turbina y modelo.
-Reemplazar por 2000.
+A negative power value is detected.
+The turbine name and model are known.
+Replace with 2000.
 */
 
 UPDATE turbinas_raw
@@ -388,17 +387,17 @@ WHERE (potencia_nominal_kw IS NULL OR potencia_nominal_kw <= 0)
   AND id_turbina = 'T001'
   AND YEAR(fecha_instalacion) = 2023;
 
--- c) Fecha de instalación fuera de rango
+-- c) Installation date out of range
 SELECT *
 FROM turbinas_raw
 WHERE fecha_instalacion < '2023-01-01'
    OR fecha_instalacion > '2026-01-01';
    
--- No se detectan fechas fuera de rango.
+-- No out-of-range dates detected.
 
 -- CLIMA
 
--- a) Valores nulos o vacios
+-- a) Null or empty values
 SELECT
     SUM(CASE WHEN fecha IS NULL THEN 1 ELSE 0 END)               AS fecha_faltante,
     SUM(CASE WHEN velocidad_viento_mps IS NULL THEN 1 ELSE 0 END) AS viento_faltante,
@@ -407,29 +406,29 @@ SELECT
     SUM(CASE WHEN presion_hpa IS NULL THEN 1 ELSE 0 END)          AS presion_faltante
 FROM clima_raw;
 
--- No se detectan valores nulos.
+-- No null values detected.
 
--- b) Temperaturas fuera de rango
+-- b) Temperatures out of range
 SELECT *
 FROM clima_raw
 WHERE temperatura_c < -20 OR temperatura_c > 60;
 
--- Eliminar temperaturas imposibles
+-- Delete impossible temperatures
 DELETE FROM clima_raw
 WHERE temperatura_c < -20 OR temperatura_c > 60;
 
--- Se eliminan 3 filas.
+-- 3 rows deleted.
 
--- c) Velocidad del viento inválida
+-- c) Invalid wind speed
 SELECT *
 FROM clima_raw
 WHERE velocidad_viento_mps IS NULL OR velocidad_viento_mps < 0;
 
--- No se detecta velocidades negativas.
+-- No negative wind speeds detected.
 
 -- PRODUCCIÓN
 
--- a) Valores nulos o vacios
+-- a) Null or empty values
 SELECT
     SUM(CASE WHEN id_registro IS NULL OR id_registro = '' THEN 1 ELSE 0 END) AS id_faltante,
     SUM(CASE WHEN id_turbina IS NULL OR id_turbina = '' THEN 1 ELSE 0 END)   AS turbina_faltante,
@@ -441,25 +440,25 @@ SELECT
     SUM(CASE WHEN temperatura_c IS NULL THEN 1 ELSE 0 END)                   AS temperatura_faltante
 FROM produccion_raw;
 
--- No se detectan valores nulos o vacios.
+-- No null or empty values detected.
 
--- b) Energía o horas inválidas
+-- b) Invalid energy or hours
 SELECT *
 FROM produccion_raw
 WHERE energia_generada_kwh IS NULL OR energia_generada_kwh < 0
    OR horas_operativas IS NULL OR horas_operativas < 0
    OR horas_inactivas IS NULL OR horas_inactivas < 0;
 
--- No se detectan horas invalidas.
+-- No invalid hours detected.
 
--- c) Validación: energía diaria negativa
+-- c) Validation: negative daily energy
 SELECT COUNT(*) AS registros_invalidos
 FROM produccion_diaria
 WHERE energia_generada_kwh < 0;
 
--- No se detectan valores de energía negativa.
+-- No negative energy values detected.
 
--- d) Validación: horas físicas de operación
+-- d) Validation: physical operating hours
 SELECT *
 FROM produccion_raw
 WHERE
@@ -469,11 +468,11 @@ WHERE
     OR horas_inactivas > 24
     OR (horas_operativas + horas_inactivas) > 24;
 
--- No se detectan horas fuera de rango.
+-- No out-of-range hours detected.
 
 -- MANTENIMIENTO
 
--- a) Valores nulos o vacios 
+-- a) Null or empty values
 SELECT
     SUM(CASE WHEN id_mant IS NULL OR id_mant = '' THEN 1 ELSE 0 END) AS id_faltante,
     SUM(CASE WHEN id_turbina IS NULL OR id_turbina = '' THEN 1 ELSE 0 END) AS turbina_faltante,
@@ -485,104 +484,104 @@ SELECT
     SUM(CASE WHEN categoria IS NULL OR categoria = '' THEN 1 ELSE 0 END) AS categoria_faltante
 FROM mantenimiento_raw;
 
--- b) Verificacion especifica de categoría
+-- b) Specific category verification
 SELECT *
 FROM mantenimiento_raw
 WHERE categoria = '';
 
 /*
-Contexto: Cuando se hace preventivo sin falla, no se cargaba ninguna descripción en la columna.
-Vamos a reemplazarlo por “Preventivo sin falla” para que no quede vacío.
+Context: When preventive maintenance was performed without failure, no description was entered in the column.
+It will be replaced with "Preventivo sin falla" so the field is not left empty.
 */
 
--- Reemplazo 
+-- Replacement
 UPDATE mantenimiento_raw
 SET categoria = 'Preventivo sin falla'
 WHERE tipo_mantenimiento = 'Preventivo'
 AND (categoria IS NULL OR categoria = '');
 
--- c) Verificación costos inválidos
+-- c) Invalid cost verification
 SELECT *
 FROM mantenimiento_raw
 WHERE costo_usd IS NULL
    OR costo_usd < 0;
  
--- Eliminación de costo negativo
+-- Delete negative cost
 DELETE FROM mantenimiento_raw
 WHERE costo_usd < 0;
 
--- d) Verificación horas 0 o NULL de mantenimiento
+-- d) Verification of null or zero maintenance hours
 
 SELECT *
 FROM mantenimiento_raw
 WHERE duracion_hs IS NULL
 OR duracion_hs = 0;
 
--- Eliminación
+-- Deletion
 DELETE FROM mantenimiento_raw
 WHERE duracion_hs IS NULL
 OR duracion_hs = 0;
 
--- Se elimina una fila.
+-- One row deleted.
 
 -- PRECIO
 
--- a) Valores nulos o vacios 
+-- a) Null or empty values
 SELECT
     SUM(CASE WHEN id_precio IS NULL THEN 1 ELSE 0 END) AS id_faltante,
     SUM(CASE WHEN fecha IS NULL THEN 1 ELSE 0 END)     AS fecha_faltante,
     SUM(CASE WHEN precio_kwh_usd IS NULL THEN 1 ELSE 0 END) AS precio_faltante
 FROM precio_raw;
 
--- No se detectan valores nulos o vacios.
+-- No null or empty values detected.
 
--- b) Precio invalido
+-- b) Invalid price
 SELECT *
 FROM precio_raw
 WHERE precio_kwh_usd IS NULL OR precio_kwh_usd <= 0;
 
--- Eliminar precio invalido
+-- Delete invalid price
 DELETE FROM precio_raw
 WHERE precio_kwh_usd IS NULL
    OR precio_kwh_usd <= 0;
--- Se eliminan dos filas.
+-- Two rows deleted.
 
 -- CURVAS TEÓRICAS
 
--- a) Valores nulos o vacios
+-- a) Null or empty values
 SELECT
     SUM(CASE WHEN modelo IS NULL OR modelo = '' THEN 1 ELSE 0 END) AS modelo_faltante,
     SUM(CASE WHEN velocidad_mps IS NULL THEN 1 ELSE 0 END)         AS velocidad_faltante,
     SUM(CASE WHEN potencia_teorica_kw IS NULL THEN 1 ELSE 0 END)   AS potencia_faltante
 FROM curvas_teoricas_raw;
 
--- No se detectan valores nulos o vacios
+-- No null or empty values detected.
 
--- b) Potencia nominal inválida o velocidades negativas
+-- b) Invalid nominal power or negative speeds
 SELECT *
 FROM curvas_teoricas_raw
 WHERE velocidad_mps < 0
    OR potencia_teorica_kw < 0;
    
--- No se detectan potencias o velocidades negativas
+-- No negative power or speed values detected.
 
--- 8) Validaciones cruzadas entre tablas
+-- 8) Cross-table validations
 
--- a) Producción con turbina inexistente
+-- a) Production with non-existent turbine
 SELECT COUNT(*) AS produccion_sin_turbina
 FROM produccion_raw p
 LEFT JOIN turbinas_raw t ON p.id_turbina = t.id_turbina
 WHERE t.id_turbina IS NULL;
 
--- No se detectan inconsistencias entre tablas.
+-- No inconsistencies detected between tables.
 
--- b) Mantenimiento con turbina inexistente
+-- b) Maintenance with non-existent turbine
 SELECT COUNT(*) AS mantenimiento_sin_turbina
 FROM mantenimiento_raw m
 LEFT JOIN turbinas_raw t ON m.id_turbina = t.id_turbina
 WHERE t.id_turbina IS NULL;
 
--- Se detecta 1 inconsistencia entre tablas.
+-- 1 inconsistency detected between tables.
 SELECT 
     m.*
 FROM mantenimiento_raw m
@@ -590,8 +589,8 @@ LEFT JOIN turbinas_raw t
     ON m.id_turbina = t.id_turbina
 WHERE t.id_turbina IS NULL;
 
--- Se detecta id_turbina incorrecto.
--- Eliminación
+-- Incorrect id_turbina detected.
+-- Deletion
 
 DELETE m
 FROM mantenimiento_raw m
@@ -599,7 +598,7 @@ LEFT JOIN turbinas_raw t
     ON m.id_turbina = t.id_turbina
 WHERE t.id_turbina IS NULL;
 
--- c) Producción previa a la fecha de instalación de la turbina
+-- c) Production prior to turbine installation date
 SELECT 
     COUNT(*) AS produccion_pre_instalacion
 FROM produccion_raw p
@@ -607,7 +606,7 @@ JOIN turbinas_raw t
     ON p.id_turbina = t.id_turbina
 WHERE p.fecha < t.fecha_instalacion;
 
--- Se detectan 20 inconsistencias.
+-- 20 inconsistencies detected.
 SELECT 
     p.*
 FROM produccion_raw p
@@ -616,24 +615,24 @@ JOIN turbinas_raw t
 WHERE p.fecha < t.fecha_instalacion
 ORDER BY p.id_turbina, p.fecha;
 
--- Se detectan 20 inconsistencias.
+-- 20 inconsistencies detected.
 
--- Eliminación
+-- Deletion
 DELETE p
 FROM produccion_raw p
 JOIN turbinas_raw t 
     ON p.id_turbina = t.id_turbina
 WHERE p.fecha < t.fecha_instalacion;
 
--- d) Mantenimiento previo a la fecha de instalación de la turbina
+-- d) Maintenance prior to turbine installation date
 SELECT COUNT(*) AS mantenimiento_pre_instalacion
 FROM mantenimiento_raw m
 JOIN turbinas_raw t ON m.id_turbina = t.id_turbina
 WHERE m.fecha_mant < t.fecha_instalacion;
 
--- No se detectan inconsistencias.
+-- No inconsistencies detected.
 
--- f) Clima fuera del rango temporal de producción
+-- f) Weather data outside the production temporal range
 
 SELECT COUNT(*) AS clima_fuera_rango_produccion
 FROM clima_raw c
@@ -641,10 +640,10 @@ LEFT JOIN produccion_raw p
     ON c.fecha = p.fecha
 WHERE p.fecha IS NULL;
 
--- No se detectan inconsistencias.
+-- No inconsistencies detected.
 
 
--- 9) Crear tablas limpias
+-- 9) Create clean tables
 
 DROP TABLE IF EXISTS turbinas;
 CREATE TABLE turbinas (
@@ -710,7 +709,7 @@ CREATE TABLE curvas_teoricas (
     UNIQUE (modelo, velocidad_mps)
 );
 
--- Insertar datos limpios
+-- Insert clean data
 
 INSERT INTO turbinas (id_turbina, modelo, potencia_nominal_kw, ubicacion, fecha_instalacion)
 SELECT id_turbina, modelo, potencia_nominal_kw, ubicacion, fecha_instalacion
@@ -745,7 +744,7 @@ INSERT INTO curvas_teoricas (modelo, velocidad_mps, potencia_teorica_kw)
 SELECT modelo, velocidad_mps, potencia_teorica_kw
 FROM curvas_teoricas_raw;
 
--- Verificación final
+-- Final verification
 
 SELECT 'turbinas' AS tabla, COUNT(*) AS registros FROM turbinas
 UNION ALL
@@ -759,9 +758,9 @@ SELECT 'precio', COUNT(*) FROM precio
 UNION ALL
 SELECT 'curvas_teoricas', COUNT(*) FROM curvas_teoricas;
 
--- 10)　Descarga de CSV limpios
+-- 10) Clean CSV export
 
--- Exportación de tabla turbinas
+-- Export turbinas table
 SELECT *
 FROM turbinas
 INTO OUTFILE '/Users/Shared/turbinas.csv'
@@ -769,7 +768,7 @@ FIELDS TERMINATED BY ';'
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Exportación de tabla clima
+-- Export clima table
 SELECT *
 FROM clima
 INTO OUTFILE '/Users/Shared/clima.csv'
@@ -777,7 +776,7 @@ FIELDS TERMINATED BY ';'
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Exportación de tabla produccion
+-- Export produccion table
 SELECT *
 FROM produccion
 INTO OUTFILE '/Users/Shared/produccion.csv'
@@ -785,7 +784,7 @@ FIELDS TERMINATED BY ';'
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Exportación de tabla mantenimiento
+-- Export mantenimiento table
 SELECT *
 FROM mantenimiento
 INTO OUTFILE '/Users/Shared/mantenimiento.csv'
@@ -793,7 +792,7 @@ FIELDS TERMINATED BY ';'
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Exportación de tabla precio
+-- Export precio table
 SELECT *
 FROM precio
 INTO OUTFILE '/Users/Shared/precio.csv'
@@ -801,7 +800,7 @@ FIELDS TERMINATED BY ';'
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
--- Exportación de tabla curvas_teoricas
+-- Export curvas_teoricas table
 SELECT *
 FROM curvas_teoricas
 INTO OUTFILE '/Users/Shared/curvas_teoricas.csv'
