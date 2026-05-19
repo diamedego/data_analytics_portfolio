@@ -146,12 +146,21 @@ The farm is evolving from a reactive to a data-driven operational model, where t
 aerowind-wind-farm-analysis
 │
 ├── data
-│   ├── production.csv
-│   ├── maintenance.csv
-│   ├── climate.csv
-│   ├── turbines.csv
-│   ├── prices.csv
-│   └── theoretical_curves.csv
+│   ├── raw
+│   │   ├── production_raw.csv
+│   │   ├── maintenance_raw.csv
+│   │   ├── climate_raw.csv
+│   │   ├── turbines_raw.csv
+│   │   ├── prices_raw.csv
+│   │   └── theoretical_curves_raw.csv
+│   │
+│   └── clean
+│       ├── Production.csv
+│       ├── Maintenance.csv
+│       ├── Climate.csv
+│       ├── Turbines.csv
+│       ├── Prices.csv
+│       └── Theoretical_Curves.csv
 │
 ├── sql
 │   ├── create_tables.sql
