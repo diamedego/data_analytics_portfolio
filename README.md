@@ -28,7 +28,8 @@ The objective was to create a **data model and analytical dashboard** to support
 
 ## Dataset
 
-The analysis integrates six datasets:
+Dataset
+The analysis integrates six datasets covering the 2023–2025 operational period, sourced from the farm's operational systems and on-site meteorological station.
 
 | Dataset            | Description                                    |
 | ------------------ | ---------------------------------------------- |
@@ -39,7 +40,7 @@ The analysis integrates six datasets:
 | prices             | Energy market prices                           |
 | theoretical_curves | Expected power generation based on wind speed  |
 
-All datasets are available in: data_analytics_portfolio/data/
+Raw files (data/raw/) contain the original source data. Clean files (data/clean/) are the output of the SQL cleaning stage and the input to the Power BI model.
 
 ---
 
