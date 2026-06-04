@@ -45,18 +45,8 @@ Raw files (data/raw/) contain the original source data. Clean files (data/clean/
 
 ## Data Cleaning (SQL)
 
-Data preparation was performed using SQL.
-
-Main tasks included:
-
-* Data structure validation
-* Duplicate detection
-* Date format standardization
-* Null value verification
-* Consistency checks across datasets
-* Numerical validation based on physical coherence
-
-SQL scripts can be found in: data_analytics_portfolio/data/
+Data preparation was performed in MySQL Workbench. Key tasks included date standardization, duplicate detection and consolidation, null and out-of-range value treatment and cross-table referential integrity validation. All corrections were grounded in physical coherence criteria — for example, removing pre-installation production records and flagging energy or cost values outside operationally valid ranges.
+SQL scripts are available in: sql/
 
 ---
 
