@@ -28,7 +28,6 @@ The objective was to create a **data model and analytical dashboard** to support
 
 ## Dataset
 
-Dataset
 The analysis integrates six datasets covering the 2023–2025 operational period, sourced from the farm's operational systems and on-site meteorological station.
 
 | Dataset            | Description                                    |
