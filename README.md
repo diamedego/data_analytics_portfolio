@@ -39,9 +39,7 @@ The analysis integrates six datasets:
 | prices             | Energy market prices                           |
 | theoretical_curves | Expected power generation based on wind speed  |
 
-All datasets are available in:
-
-data_analytics_portfolio/data/
+All datasets are available in: data_analytics_portfolio/data/
 
 ---
 
@@ -58,9 +56,7 @@ Main tasks included:
 * Consistency checks across datasets
 * Numerical validation based on physical coherence
 
-SQL scripts can be found in: 
-
-data_analytics_portfolio/data/
+SQL scripts can be found in: data_analytics_portfolio/data/
 
 ---
 
