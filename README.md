@@ -58,9 +58,10 @@ Main tasks included:
 * Consistency checks across datasets
 * Numerical validation based on physical coherence
 
-SQL scripts can be found in:
+SQL scripts can be found in: 
 
-data_analytics_portfolio/sql
+data_analytics_portfolio/data/
+
 ---
 
 ## Data Model
@@ -69,8 +70,7 @@ After cleaning, the datasets were integrated into a relational model used for an
 
 Main relationships:
 
-<img width="442" height="353" alt="image" src="https://github.com/user-attachments/assets/6ebde6a4-0c79-44d6-b7e1-6ac545f2c89d" />
-
+<img width="975" height="686" alt="image" src="https://github.com/user-attachments/assets/60bc2a73-aa5d-4184-9616-4c4afde281cb" />
 
 
 This structure enables analysis across turbines, time periods and environmental conditions.
