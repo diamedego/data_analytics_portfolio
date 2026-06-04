@@ -63,7 +63,7 @@ SQL scripts can be found in: data_analytics_portfolio/data/
 ## Data Model
 
 After cleaning, the datasets were integrated into a constellation schema (extended star model) in Power BI, built around two fact tables — production and maintenance — connected to shared dimension tables covering turbines, weather, pricing, and time. 
-Main relationships:
+
 
 <img width="975" height="686" alt="image" src="https://github.com/user-attachments/assets/60bc2a73-aa5d-4184-9616-4c4afde281cb" />
 
