@@ -39,7 +39,9 @@ The analysis integrates six datasets:
 | prices             | Energy market prices                           |
 | theoretical_curves | Expected power generation based on wind speed  |
 
-All datasets are available in the **/data** folder.
+All datasets are available in:
+
+data_analytics_portfolio/data/
 
 ---
 
@@ -58,7 +60,7 @@ Main tasks included:
 
 SQL scripts can be found in:
 
-sql file 
+data_analytics_portfolio/sql
 ---
 
 ## Data Model
